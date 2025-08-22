@@ -1,4 +1,5 @@
 import os
+import json
 import logging
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -36,6 +37,16 @@ os.makedirs(app.config['GENERATED_FOLDER'], exist_ok=True)
 
 # Initialize the app with the extension
 db.init_app(app)
+
+# Add custom template filter for JSON parsing
+@app.template_filter('fromjson')
+def fromjson_filter(value):
+    if value:
+        try:
+            return json.loads(value)
+        except (ValueError, TypeError):
+            return {}
+    return {}
 
 with app.app_context():
     # Import models and routes

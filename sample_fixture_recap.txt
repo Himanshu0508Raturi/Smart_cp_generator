@@ -1,0 +1,33 @@
+FIXTURE RECAP - VOYAGE CHARTER
+
+VESSEL: MV ATLANTIC TRADER
+CHARTERERS: Global Shipping Ltd
+OWNERS: Atlantic Maritime Corp
+DATE: August 22, 2025
+
+CARGO DETAILS:
+- Commodity: Iron Ore
+- Quantity: 75,000 MT +/- 10% in Charterers' option
+- Stowage Factor: 12-15 CBF/MT
+
+VOYAGE:
+- Load Port: Port Hedland, Australia
+- Discharge Port: Rotterdam, Netherlands
+- Laycan: September 15-25, 2025
+
+COMMERCIAL TERMS:
+- Freight Rate: USD 18.50 per metric ton
+- Laytime: 72 hours total (36 hours loading + 36 hours discharging)
+- Demurrage: USD 25,000 per day pro rata
+- Despatch: USD 12,500 per day pro rata
+
+PAYMENT:
+- Freight payment: 95% on Bill of Lading, 5% on final discharge
+- Currency: US Dollars
+- Bank: Charterers' nominated bank
+
+ADDITIONAL TERMS:
+- Weather Working Days basis
+- Saturdays, Sundays, and holidays excepted unless used
+- Safe port/berth warranty by Charterers
+- Ice clause applicable
