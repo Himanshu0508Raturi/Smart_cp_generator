@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Documents - Smart CP Generator{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-upload me-2"></i>Create New Contract
+                </h4>
+                <p class="mb-0 mt-2 opacity-75">Upload your documents or enter text to generate a Charter Party contract</p>
+            </div>
+            
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                    <!-- Contract Name -->
+                    <div class="mb-4">
+                        <label for="contract_name" class="form-label fw-bold">
+                            <i class="fas fa-file-signature me-2"></i>Contract Name *
+                        </label>
+                        <input type="text" class="form-control" id="contract_name" name="contract_name" 
+                               placeholder="Enter a name for this contract" required>
+                        <div class="form-text">This will be used as the filename for generated documents</div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Fixture Recap -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 border-primary">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-file-alt me-2"></i>Fixture Recap
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text small mb-3">
+                                        Summary of the deal terms and key commercial points
+                                    </p>
+                                    
+                                    <!-- File Upload -->
+                                    <div class="mb-3">
+                                        <label for="fixture_recap_file" class="form-label">Upload File</label>
+                                        <input type="file" class="form-control" id="fixture_recap_file" 
+                                               name="fixture_recap_file" accept=".txt,.doc,.docx,.pdf">
+                                        <div class="form-text">Supported: TXT, DOC, DOCX, PDF</div>
+                                    </div>
+                                    
+                                    <div class="text-center mb-2">
+                                        <span class="badge bg-secondary">OR</span>
+                                    </div>
+                                    
+                                    <!-- Text Input -->
+                                    <div class="mb-3">
+                                        <label for="fixture_recap_text" class="form-label">Enter Text</label>
+                                        <textarea class="form-control" id="fixture_recap_text" 
+                                                  name="fixture_recap_text" rows="6" 
+                                                  placeholder="Paste or type your fixture recap here..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Base CP -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 border-success">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-file-contract me-2"></i>Base CP Template
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text small mb-3">
+                                        The standard Charter Party template or base contract
+                                    </p>
+                                    
+                                    <!-- File Upload -->
+                                    <div class="mb-3">
+                                        <label for="base_cp_file" class="form-label">Upload File</label>
+                                        <input type="file" class="form-control" id="base_cp_file" 
+                                               name="base_cp_file" accept=".txt,.doc,.docx,.pdf">
+                                        <div class="form-text">Supported: TXT, DOC, DOCX, PDF</div>
+                                    </div>
+                                    
+                                    <div class="text-center mb-2">
+                                        <span class="badge bg-secondary">OR</span>
+                                    </div>
+                                    
+                                    <!-- Text Input -->
+                                    <div class="mb-3">
+                                        <label for="base_cp_text" class="form-label">Enter Text</label>
+                                        <textarea class="form-control" id="base_cp_text" 
+                                                  name="base_cp_text" rows="6" 
+                                                  placeholder="Paste or type your base CP template here..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Negotiated Clauses -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 border-warning">
+                                <div class="card-header bg-warning text-dark">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-comments me-2"></i>Negotiated Clauses
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text small mb-3">
+                                        Additional terms, amendments, and negotiated provisions
+                                    </p>
+                                    
+                                    <!-- File Upload -->
+                                    <div class="mb-3">
+                                        <label for="negotiated_clauses_file" class="form-label">Upload File</label>
+                                        <input type="file" class="form-control" id="negotiated_clauses_file" 
+                                               name="negotiated_clauses_file" accept=".txt,.doc,.docx,.pdf">
+                                        <div class="form-text">Supported: TXT, DOC, DOCX, PDF</div>
+                                    </div>
+                                    
+                                    <div class="text-center mb-2">
+                                        <span class="badge bg-secondary">OR</span>
+                                    </div>
+                                    
+                                    <!-- Text Input -->
+                                    <div class="mb-3">
+                                        <label for="negotiated_clauses_text" class="form-label">Enter Text</label>
+                                        <textarea class="form-control" id="negotiated_clauses_text" 
+                                                  name="negotiated_clauses_text" rows="6" 
+                                                  placeholder="Paste or type your negotiated clauses here..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Section -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h6 class="mb-3">Ready to Generate Your Contract?</h6>
+                                    <p class="text-muted small mb-3">
+                                        The system will process your documents, extract key clauses using AI, 
+                                        and generate a final Charter Party contract.
+                                    </p>
+                                    
+                                    <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
+                                        <i class="fas fa-cogs me-2"></i>Process & Generate Contract
+                                    </button>
+                                    
+                                    <div class="mt-3">
+                                        <small class="text-muted">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            At least one document is required to proceed
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Processing Modal -->
+<div class="modal fade" id="processingModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center py-4">
+                <div class="spinner-border text-primary mb-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <h5>Processing Your Contract</h5>
+                <p class="text-muted mb-0">
+                    Please wait while we analyze your documents and generate the final contract...
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    // Show processing modal
+    const modal = new bootstrap.Modal(document.getElementById('processingModal'));
+    modal.show();
+    
+    // Disable submit button
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+});
+
+// File input change handlers to clear opposite input
+const fileInputs = ['fixture_recap', 'base_cp', 'negotiated_clauses'];
+fileInputs.forEach(prefix => {
+    const fileInput = document.getElementById(`${prefix}_file`);
+    const textInput = document.getElementById(`${prefix}_text`);
+    
+    fileInput.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            textInput.value = '';
+        }
+    });
+    
+    textInput.addEventListener('input', function() {
+        if (this.value.trim()) {
+            fileInput.value = '';
+        }
+    });
+});
+</script>
+{% endblock %}
