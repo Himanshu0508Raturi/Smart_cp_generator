@@ -1,0 +1,104 @@
+You are an AI developer assistant. I want you to build a full-stack web application for a hackathon project called **Smart CP Generator – Contract Automation**.
+
+### Project Background
+Charter Party (CP) documents are lengthy contracts between shipowners and charterers. Final CPs are created by combining:
+1. A base template (Base CP)
+2. A fixture recap (summary of deal terms)
+3. Negotiated clauses (additional terms)
+
+The solution should automatically generate a **final working CP contract document** by merging these inputs, while preserving formatting and legal structure.
+
+### Core Requirements
+1. Accept **three inputs**: Fixture Recap, Base CP, Negotiated Clauses (file uploads or text input).
+2. Automatically generate the **final CP contract** by combining them.
+3. Maintain formatting and legal structure in the final document.
+4. Provide **document preview** inside the UI.
+5. Support **download in Word (.docx) and PDF**.
+6. Include a clean, intuitive **UI for document management** (upload, preview, download).
+7. Modular, scalable, and well-documented code.
+
+### Bonus Requirements
+- Use **AI/NLP** to identify, extract, and map clauses (e.g., spaCy, HuggingFace Transformers).
+- Clause extraction / classification pipeline for negotiated terms.
+- Future scalability for integration with APIs (e.g., weather, bunker fuel, voyage events).
+
+---
+
+### Recommended Tech Stack
+- **Frontend (User Interface):**
+  - HTML5, CSS3, JavaScript (ES6+)
+  - TailwindCSS or Bootstrap for styling
+- **Backend (Application Logic):**
+  - Python (Flask or FastAPI) for document parsing, NLP, and API endpoints
+- **Database & Storage:**
+  - PostgreSQL or MySQL for relational data (user accounts, contracts, history)
+  - Cloud/local storage for file uploads and outputs
+- **AI/NLP Processing:**
+  - spaCy for clause parsing & tokenization
+  - Hugging Face Transformers for advanced NLP (clause similarity/mapping)
+  - Optional: scikit-learn / TensorFlow if classification models are needed
+- **Document Handling:**
+  - python-docx for Word file handling
+  - reportlab / weasyprint for PDF generation
+- **Queue System (optional for large files):**
+  - Redis or Celery for background tasks
+
+---
+
+### System Architecture
+1. **Client Layer (Frontend)**
+   - Web app UI for uploading Fixture Recap, Base CP, and Negotiated Clauses
+   - Dashboard to manage contracts
+   - Preview of final generated CP
+   - REST API calls to backend
+
+2. **Application Layer (Backend/API)**
+   - Endpoints for:
+     - File uploads
+     - Contract generation
+     - NLP clause extraction
+     - User authentication
+   - Session management
+   - Queue (Redis/Celery) for async processing
+
+3. **Processing & Intelligence Layer**
+   - Document parsers for input files
+   - NLP pipelines for clause mapping & formatting
+   - Contract assembly logic (merge recap + base CP + negotiated terms)
+
+4. **Database & Storage Layer**
+   - PostgreSQL/MySQL for structured data
+   - File storage for original and generated contracts
+   - Redis cache for fast retrieval
+
+5. **Reporting & Export Layer**
+   - Export contract in Word and PDF
+   - JSON/CSV for integration with other systems
+
+---
+
+### Evaluation Criteria (Hackathon)
+- Accuracy and reliability of document generation
+- Intuitive and user-friendly UI
+- Technical innovation (AI/NLP integration)
+- Code quality, modularity, and documentation
+- Scalability for real-world deployment
+
+---
+
+### What You Should Build
+- A full-stack web app with **frontend + backend + database + document handling**.
+- Include authentication (basic login/signup).
+- Build REST APIs for file uploads and contract generation.
+- Implement **document preview (HTML render)** and **download as Word/PDF**.
+- AI-powered clause extraction (simple version with spaCy + HuggingFace).
+- Clean UI with TailwindCSS/Bootstrap.
+
+Generate:
+- Frontend (HTML/JS/CSS with Tailwind)
+- Backend (FastAPI or Flask in Python)
+- PostgreSQL DB integration
+- NLP pipeline setup
+- Routes for upload/merge/download
+- Export logic for Word/PDF
+- README.md file with setup instructions
