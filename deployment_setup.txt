@@ -1,0 +1,48 @@
+# Deployment Setup Instructions for Smart CP Generator
+
+## Creating requirements.txt file
+
+1. Copy the content from 'project_requirements.txt' to a new file called 'requirements.txt' in your project root
+
+2. For local development:
+```bash
+pip install -r requirements.txt
+python -m spacy download en_core_web_sm
+```
+
+3. For deployment platforms:
+   - Most platforms (Render, Railway, Fly.io) will automatically install from requirements.txt
+   - Some may need additional setup for spaCy model download
+
+## Platform-specific notes:
+
+### Render.com:
+- Build Command: pip install -r requirements.txt && python -m spacy download en_core_web_sm
+- Start Command: gunicorn main:app
+
+### Railway.app:
+- Automatically detects requirements.txt
+- May need to add spaCy model download to build process
+
+### Fly.io:
+- Add to Dockerfile or use buildpacks
+- Include spaCy model in build steps
+
+### Replit:
+- Dependencies are managed through the package manager
+- requirements.txt used for external deployment
+
+## Environment Variables (optional):
+SESSION_SECRET=your-secret-key-here
+
+## File Structure Check:
+Ensure these files exist in your project:
+- main.py
+- app.py
+- routes.py
+- models.py
+- document_processor.py
+- nlp_processor.py
+- templates/ (folder with HTML files)
+- uploads/ (will be created automatically)
+- generated/ (will be created automatically)
