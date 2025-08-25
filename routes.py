@@ -2,8 +2,8 @@ import os
 import json
 from flask import render_template, request, redirect, url_for, flash, send_file, jsonify
 from werkzeug.utils import secure_filename
-from app import app, db
-from models import Contract, ProcessingLog
+from app import app
+from models import Contract
 from document_processor import DocumentProcessor
 from nlp_processor import NLPProcessor
 
@@ -19,9 +19,10 @@ def allowed_file(filename):
 @app.route('/')
 def index():
     """Main dashboard showing recent contracts and system overview"""
-    recent_contracts = Contract.query.order_by(Contract.updated_at.desc()).limit(5).all()
-    total_contracts = Contract.query.count()
-    completed_contracts = Contract.query.filter_by(status='completed').count()
+    all_contracts = Contract.get_all()
+    recent_contracts = all_contracts[:5]  # Get first 5 (already sorted by date)
+    total_contracts = len(all_contracts)
+    completed_contracts = Contract.count_by_status('completed')
     
     stats = {
         'total': total_contracts,
@@ -42,8 +43,7 @@ def upload_documents():
         
         # Create new contract record
         contract = Contract(contract_name=contract_name, status='processing')
-        db.session.add(contract)
-        db.session.commit()
+        contract.save()
         
         try:
             # Process each document type
@@ -105,64 +105,64 @@ def upload_documents():
             contract.pdf_path = pdf_path
             contract.status = 'completed'
             
-            # Log success
-            log = ProcessingLog(
-                contract_id=contract.id,
-                log_level='INFO',
-                message='Contract processed successfully'
-            )
-            db.session.add(log)
-            
-            db.session.commit()
+            # Save contract
+            contract.save()
             flash('Contract processed successfully!', 'success')
             return redirect(url_for('preview_contract', contract_id=contract.id))
             
         except Exception as e:
             contract.status = 'error'
-            log = ProcessingLog(
-                contract_id=contract.id,
-                log_level='ERROR',
-                message=str(e)
-            )
-            db.session.add(log)
-            db.session.commit()
+            contract.save()
             flash(f'Error processing contract: {str(e)}', 'error')
             app.logger.error(f'Contract processing error: {str(e)}')
     
     return render_template('upload.html')
 
-@app.route('/preview/<int:contract_id>')
+@app.route('/preview/<contract_id>')
 def preview_contract(contract_id):
     """Preview generated contract"""
-    contract = Contract.query.get_or_404(contract_id)
+    contract = Contract.load(contract_id)
+    if not contract:
+        flash('Contract not found', 'error')
+        return redirect(url_for('index'))
     return render_template('preview.html', contract=contract)
 
 @app.route('/history')
 def contract_history():
     """View all contracts with filtering and search"""
-    page = request.args.get('page', 1, type=int)
     status_filter = request.args.get('status', '')
     search_term = request.args.get('search', '')
     
-    query = Contract.query
+    all_contracts = Contract.get_all()
     
+    # Apply filters
     if status_filter:
-        query = query.filter_by(status=status_filter)
+        all_contracts = [c for c in all_contracts if c.status == status_filter]
     
     if search_term:
-        query = query.filter(Contract.contract_name.contains(search_term))
+        all_contracts = [c for c in all_contracts if search_term.lower() in c.contract_name.lower()]
     
-    contracts = query.order_by(Contract.updated_at.desc()).paginate(
-        page=page, per_page=10, error_out=False
-    )
+    # Simple pagination simulation (for template compatibility)
+    class MockPagination:
+        def __init__(self, items):
+            self.items = items
+            self.has_prev = False
+            self.has_next = False
+            self.prev_num = None
+            self.next_num = None
+    
+    contracts = MockPagination(all_contracts)
     
     return render_template('history.html', contracts=contracts, 
                          status_filter=status_filter, search_term=search_term)
 
-@app.route('/download/<int:contract_id>/<file_type>')
+@app.route('/download/<contract_id>/<file_type>')
 def download_file(contract_id, file_type):
     """Download generated contract files"""
-    contract = Contract.query.get_or_404(contract_id)
+    contract = Contract.load(contract_id)
+    if not contract:
+        flash('Contract not found', 'error')
+        return redirect(url_for('index'))
     
     if file_type == 'docx' and contract.docx_path:
         return send_file(contract.docx_path, as_attachment=True, 
@@ -174,10 +174,13 @@ def download_file(contract_id, file_type):
         flash('File not found', 'error')
         return redirect(url_for('preview_contract', contract_id=contract_id))
 
-@app.route('/delete/<int:contract_id>', methods=['POST'])
+@app.route('/delete/<contract_id>', methods=['POST'])
 def delete_contract(contract_id):
     """Delete a contract and its associated files"""
-    contract = Contract.query.get_or_404(contract_id)
+    contract = Contract.load(contract_id)
+    if not contract:
+        flash('Contract not found', 'error')
+        return redirect(url_for('contract_history'))
     
     try:
         # Delete associated files
@@ -186,10 +189,10 @@ def delete_contract(contract_id):
         if contract.pdf_path and os.path.exists(contract.pdf_path):
             os.remove(contract.pdf_path)
         
-        # Delete database records
-        ProcessingLog.query.filter_by(contract_id=contract.id).delete()
-        db.session.delete(contract)
-        db.session.commit()
+        # Delete contract file
+        contract_file = os.path.join(app.config['CONTRACTS_STORAGE'], f'{contract.id}.json')
+        if os.path.exists(contract_file):
+            os.remove(contract_file)
         
         flash('Contract deleted successfully', 'success')
     except Exception as e:
@@ -204,5 +207,4 @@ def not_found(error):
 
 @app.errorhandler(500)
 def internal_error(error):
-    db.session.rollback()
     return render_template('base.html', error_message="Internal server error"), 500

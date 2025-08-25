@@ -1,13 +1,9 @@
-# Smart CP Generator - Project Dependencies
+# Smart CP Generator - Project Dependencies (Database-Free Version)
 # Copy this content to your requirements.txt file for deployment
 
-# Core Flask Framework
+# Core Flask Framework (No Database Dependencies)
 Flask>=2.3.0
-Flask-SQLAlchemy>=3.0.0
 Werkzeug>=2.3.0
-
-# Database
-SQLAlchemy>=2.0.0
 
 # Document Processing
 python-docx>=1.1.0
